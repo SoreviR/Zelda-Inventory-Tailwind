@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background-primary: #334155;
+  --primary-color: #475569;
+  --secondary-color: #1e293b;
+  --item-selection-color: #60a5fa;
+  --border-color: #64748b;
+  --modal-title-color: #0f172a;
+  --button-background: #64748b;
+}
