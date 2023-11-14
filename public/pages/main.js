@@ -70,7 +70,6 @@ const renderingItems = (types) => {
 
           itemModalInfo(itemSelectedId, itemCategory);
 
-          // AGREGAR FUNCION PARA LA ANIMACION DE FLECHAS --------------------------------------
           arrowAnimation(itemSelectedId);
         });
 
@@ -96,6 +95,8 @@ const renderingItems = (types) => {
           changeItemBgColor(itemSelectedId);
 
           itemModalInfo(itemSelectedId, itemCategory);
+
+          arrowAnimation(itemSelectedId);
         });
 
         itemSquare.innerHTML = `<img id="${shield.name}" src="${shield.icon}"/><aside class="h-5 w-7 border border-border-color absolute bottom-0 right-0 flex justify-center items-center translate-x-2 translate-y-2 bg-background-primary"><p class="italic">${shield.stats.defense}</p></aside>`;
@@ -121,6 +122,8 @@ const renderingItems = (types) => {
           changeItemBgColor(itemSelectedId);
 
           itemModalInfo(itemSelectedId, itemCategory);
+
+          arrowAnimation(itemSelectedId);
         });
 
         itemSquare.innerHTML = `<img id="${armor.name}" src="${armor.icon}"/><aside class="h-5 w-7 border border-border-color absolute bottom-0 right-0 flex justify-center items-center translate-x-2 translate-y-2 bg-background-primary"><p class="italic">${armor.stats.armor}</p></aside>`;
@@ -228,8 +231,11 @@ const changeItemBgColor = (itemSelectedId) => {
         itemSelectedId.split(" ")[0] === "Flameblade")
     ) {
       element.classList.add("bg-item-selection-color");
+      element.classList.add("shadow");
+      element.classList.add("shadow-white");
     } else {
       element.classList.remove("bg-item-selection-color");
+      element.classList.remove("shadow");
     }
   });
 };
@@ -347,9 +353,30 @@ const compareItemStats = (itemStat) => {
 // --------------------------------------------- ARROWS SELECTION ANIMATION ------------------------------------
 
 const arrowAnimation = (itemId) => {
-  const itemClase = itemId.split(" ")[0];
-  const divAnimation = document.querySelector("");
-  console.log(itemId);
-  console.log(itemClase);
-  console.log(divAnimation);
+  // ---------------------------- ARROWS CONTAINER --------------------------------
+  const divArrowContainer = document.createElement("div");
+  divArrowContainer.classList =
+    "arrow-container absolute top-0 w-[100px] h-[100px] animate-expand-animation"; //  animate-expanding
+  divArrowContainer.innerHTML = `<div class="absolute bottom-0 right-0  w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute bottom-0 left-0 rotate-90 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute top-0 left-0 rotate-180 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute top-0 right-0 -rotate-90 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div>`;
+
+  const allItemsDivs = document.querySelectorAll("#items-area div");
+
+  const itemClase = itemId.split(" ");
+
+  const resetAnimation = document.querySelector(".arrow-container");
+
+  if (resetAnimation != null) {
+    resetAnimation.remove();
+  }
+
+  allItemsDivs.forEach((div) => {
+    if (
+      (div.classList[0] === itemClase[0] &&
+        div.classList[1] === itemClase[1]) ||
+      (div.classList[0] === "Flameblade" && itemClase[0] === "Flameblade")
+    ) {
+      div.append(divArrowContainer);
+    } else {
+    }
+  });
 };

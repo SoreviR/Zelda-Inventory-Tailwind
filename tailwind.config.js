@@ -12,7 +12,17 @@ module.exports = {
         "modal-title-color": "var(--modal-title-color)",
         "button-background": "var(--button-background)",
       },
+      keyframes: {
+        "expand-animation": {
+          "0%": { transform: "scale(.95)" },
+          "50%": { transform: "scale(1.1)" },
+          "100%": { transform: "scale(.95)" },
+        },
+      },
+      animation: {
+        "expand-animation": "expand-animation 1s linear infinite",
+      },
     },
+    plugins: [],
   },
-  plugins: [],
 };
