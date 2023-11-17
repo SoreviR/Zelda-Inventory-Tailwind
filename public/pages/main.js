@@ -60,21 +60,36 @@ const renderingItems = (types) => {
       items.weapons.forEach((weapon, index) => {
         const itemSquare = document.createElement("div");
 
-        itemSquare.addEventListener("click", (event) => {
-          const imgSource = event.target.src;
-          const itemCategory = weapon.category;
-          equipedItems(imgSource, itemCategory);
+        itemSquare.addEventListener("click", first);
 
-          const itemSelectedId = event.target.id;
-          changeItemBgColor(itemSelectedId);
+        let itemSelectedId;
+        let imgSource;
+        let itemCategory;
+
+        function first(event) {
+          event.stopImmediatePropagation();
+
+          imgSource = event.target.src;
+          itemCategory = weapon.category;
+          itemSelectedId = event.target.id;
 
           itemModalInfo(itemSelectedId, itemCategory);
-
           arrowAnimation(itemSelectedId);
-        });
+
+          this.removeEventListener("click", first);
+          document.onclick = second;
+        }
+
+        function second(event) {
+          event.stopImmediatePropagation();
+          itemModalSelection(itemSelectedId, imgSource, itemCategory);
+
+          this.removeEventListener("click", second);
+          document.onclick = first;
+        }
 
         itemSquare.innerHTML = `<img id="${weapon.name}" src="${weapon.icon}"/><aside class="h-5 w-7 border border-border-color absolute bottom-0 right-0 flex justify-center items-center translate-x-2 translate-y-2 bg-background-primary"><p class="italic">${weapon.stats.damage}</p></aside>`;
-        itemSquare.classList = `${weapon.name} h-[100px] w-[100px] border border-border-color relative  cursor-pointer`;
+        itemSquare.classList = `${weapon.name} relative  h-[100px] w-[100px] border border-border-color cursor-pointer`;
         itemsArea.append(itemSquare);
       });
 
@@ -86,18 +101,33 @@ const renderingItems = (types) => {
       items.shields.forEach((shield, index) => {
         const itemSquare = document.createElement("div");
 
-        itemSquare.addEventListener("click", (event) => {
-          const imgSource = event.target.src;
-          const itemCategory = shield.category;
-          equipedItems(imgSource, itemCategory);
+        itemSquare.addEventListener("click", first);
 
-          const itemSelectedId = event.target.id;
-          changeItemBgColor(itemSelectedId);
+        let imgSource;
+        let itemCategory;
+        let itemSelectedId;
+
+        function first(event) {
+          event.stopImmediatePropagation();
+
+          imgSource = event.target.src;
+          itemCategory = shield.category;
+          itemSelectedId = event.target.id;
 
           itemModalInfo(itemSelectedId, itemCategory);
-
           arrowAnimation(itemSelectedId);
-        });
+
+          this.removeEventListener("click", first);
+          document.onclick = second;
+        }
+
+        function second(event) {
+          event.stopImmediatePropagation();
+          itemModalSelection(itemSelectedId, imgSource, itemCategory);
+
+          this.removeEventListener("click", second);
+          document.onclick = first;
+        }
 
         itemSquare.innerHTML = `<img id="${shield.name}" src="${shield.icon}"/><aside class="h-5 w-7 border border-border-color absolute bottom-0 right-0 flex justify-center items-center translate-x-2 translate-y-2 bg-background-primary"><p class="italic">${shield.stats.defense}</p></aside>`;
         itemSquare.classList = `${shield.name} h-[100px] w-[100px] border border-border-color relative  cursor-pointer`;
@@ -113,18 +143,33 @@ const renderingItems = (types) => {
       items.armors.forEach((armor, index) => {
         const itemSquare = document.createElement("div");
 
-        itemSquare.addEventListener("click", (event) => {
-          const imgSource = event.target.src;
-          const itemCategory = armor.category;
-          equipedItems(imgSource, itemCategory);
+        itemSquare.addEventListener("click", first);
 
-          const itemSelectedId = event.target.id;
-          changeItemBgColor(itemSelectedId);
+        let imgSource;
+        let itemCategory;
+        let itemSelectedId;
+
+        function first(event) {
+          event.stopImmediatePropagation();
+
+          imgSource = event.target.src;
+          itemCategory = armor.category;
+          itemSelectedId = event.target.id;
 
           itemModalInfo(itemSelectedId, itemCategory);
-
           arrowAnimation(itemSelectedId);
-        });
+
+          this.removeEventListener("click", first);
+          document.onclick = second;
+        }
+
+        function second(event) {
+          event.stopImmediatePropagation();
+          itemModalSelection(itemSelectedId, imgSource, itemCategory);
+
+          this.removeEventListener("click", second);
+          document.onclick = first;
+        }
 
         itemSquare.innerHTML = `<img id="${armor.name}" src="${armor.icon}"/><aside class="h-5 w-7 border border-border-color absolute bottom-0 right-0 flex justify-center items-center translate-x-2 translate-y-2 bg-background-primary"><p class="italic">${armor.stats.armor}</p></aside>`;
         itemSquare.classList = `${armor.name} h-[100px] w-[100px] border border-border-color relative  cursor-pointer`;
@@ -353,10 +398,9 @@ const compareItemStats = (itemStat) => {
 // --------------------------------------------- ARROWS SELECTION ANIMATION ------------------------------------
 
 const arrowAnimation = (itemId) => {
-  // ---------------------------- ARROWS CONTAINER --------------------------------
+  // ---------------------------- ARROWS CONTAINER ANIMATION--------------------------------
   const divArrowContainer = document.createElement("div");
-  divArrowContainer.classList =
-    "arrow-container absolute top-0 w-[100px] h-[100px] animate-expand-animation"; //  animate-expanding
+  divArrowContainer.classList = ` arrow-container absolute top-0 w-[100px] h-[100px] animate-expand-animation`;
   divArrowContainer.innerHTML = `<div class="absolute bottom-0 right-0  w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute bottom-0 left-0 rotate-90 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute top-0 left-0 rotate-180 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div><div class="absolute top-0 right-0 -rotate-90 w-0 h-0 border-white border-r-[11px]  border-t-[11px] border-t-transparent  "></div>`;
 
   const allItemsDivs = document.querySelectorAll("#items-area div");
@@ -376,7 +420,65 @@ const arrowAnimation = (itemId) => {
       (div.classList[0] === "Flameblade" && itemClase[0] === "Flameblade")
     ) {
       div.append(divArrowContainer);
-    } else {
     }
   });
 };
+
+// --------------------------------------------- ITEM SELECTION MODAL ------------------------------------
+
+const itemModalSelection = (itemId, imgSource, itemCategory) => {
+  const allItemsDivs = document.querySelectorAll("#items-area div");
+
+  const itemClase = itemId.split(" ");
+
+  const divItemModal = document.createElement("div");
+
+  divItemModal.classList.add(
+    "item-modal",
+    "z-50",
+    "flex",
+    "flex-col",
+    "p-4",
+    "border",
+    "border-primary-color",
+    "gap-4",
+    "bg-secondary-color",
+    "absolute",
+    "top-[50px]",
+    "left-[50px]"
+  );
+
+  const itemModalButton = `<div class="modal-button overflow-hidden flex z-50 px-6 py-2 text-lg bg-slate-800 justify-center items-center w-full border border-slate-700 hover:scale-110 hover:border-slate-300"><div class="animate-appear">`;
+
+  divItemModal.innerHTML = `${itemModalButton}Equip</div></div>${itemModalButton}Throw</div></div>${itemModalButton}Cancel</div></div>`;
+
+  allItemsDivs.forEach((div) => {
+    if (
+      (div.classList[0] === itemClase[0] &&
+        div.classList[1] === itemClase[1]) ||
+      (div.classList[0] === "Flameblade" && itemClase[0] === "Flameblade")
+    ) {
+      div.append(divItemModal);
+    }
+  });
+
+  // --------------------------------------------- ITEM MODAL SELECTION ------------------------------------
+  const divDeItemModal = document.querySelectorAll(".item-modal .modal-button");
+  const deleteItemModal = document.querySelector(".item-modal");
+
+  if (divDeItemModal) {
+    divDeItemModal.forEach((button) => {
+      button.addEventListener("click", (event) => {
+        if (button.innerText === "Equip") {
+          changeItemBgColor(itemId);
+          equipedItems(imgSource, itemCategory);
+          deleteItemModal.remove();
+        } else if (button.innerText === "Cancel") {
+          deleteItemModal.remove();
+        }
+      });
+    });
+  }
+};
+
+// --------------------------------------------- EQUIPED ITEMS TO LOCAL STORAGE ------------------------------------
